@@ -20,7 +20,8 @@ This project automates the process of downloading TSV files associated with spec
 
 - Python 3.7 or later.
 - Firefox browser installed.
-- GeckoDriver for Selenium (compatible with your Firefox version).
+- GeckoDriver for Selenium (compatible with your Firefox version). - https://github.com/mozilla/geckodriver/releases
+- Check Firefox and GeckoDriver Compatibility Here - https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html
 
 ### Install Dependencies
 
