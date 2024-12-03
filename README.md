@@ -1,7 +1,7 @@
 # GM-Repo-Extraction
 ## Scraping Run IDs and Organizing Downloaded Files
 
-This project automates the process of downloading TSV files associated with specific `Run IDs` and organizes them into folders based on their corresponding `Mesh IDs`.
+This project automates downloading TSV files associated with specific `Run IDs` and organizes them into folders based on their corresponding `Mesh IDs`.
 
 ## Features
 
@@ -117,9 +117,9 @@ If the headless mode doesn't work:
 Set options.headless = False to debug with a visible browser window.
 #### 3. Missing Files
 Check the console output for errors.
-Verify the website’s behavior in a normal browser for compatibility issues.
+Verify the website’s behaviour in a normal browser for compatibility issues.
 
-### Future Enhancements
+## Future Enhancements
 - Implement retry logic for failed downloads.
 - Add support for other browsers like Chrome.
 - Generate a summary report of downloaded files.
