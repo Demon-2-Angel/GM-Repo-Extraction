@@ -1,4 +1,5 @@
 # GM-Repo-Extraction
+
 ## Scraping Run IDs and Organizing Downloaded Files
 
 This project automates downloading TSV files associated with specific `Run IDs` and organizes them into folders based on their corresponding `Mesh IDs`.
@@ -8,32 +9,29 @@ This project automates downloading TSV files associated with specific `Run IDs` 
 - Reads `Mesh ID` and `Run ID` pairs from an Excel file.
 - Ensures a folder structure where:
   - Each `Mesh ID` is a main folder.
-  - Each `Run ID` is a subfolder under its respective `Mesh ID`.
-- Scrapes the web to download TSV files for each `Run ID` from the provided URL.
-- Saves the downloaded TSV files in their respective `Run ID` folders.
-- Implements multithreading for faster downloads.
-- Runs in headless mode for improved performance.
+  - Each `Run ID` is saved as a `.tsv` file in its respective `Mesh ID` folder.
+- Scrapes data using API calls for each `Run ID`.
+- Automatically resumes from where it left off if interrupted by checking existing `.tsv` files.
+- Processes `Run IDs` in batches of 5000 for efficiency.
+- Implements error handling for failed API calls.
 
 ---
 
 ## Prerequisites
 
 - Python 3.7 or later.
-- Firefox browser installed.
-- GeckoDriver for Selenium (compatible with your Firefox version). - https://github.com/mozilla/geckodriver/releases
-- Check Firefox and GeckoDriver Compatibility Here - https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html
+- Required libraries:
+  - `pandas`
+  - `requests`
+  - `tqdm`
 
 ### Install Dependencies
 
 Install the required Python libraries:
 
 ```
-bash
-pip install pandas selenium
+pip install pandas requests tqdm
 ```
-
-## Download GeckoDriver
-Download GeckoDriver from the official releases page and add it to your system PATH or specify its location in the script.
 
 ## File Structure
 Ensure the following file structure before running the script:
@@ -44,61 +42,62 @@ project/
 ├── Data/
 │   └── Run_Ids - Except Health.xlsx   # Input Excel file containing 'Mesh ID' and 'Run ID' pairs
 │
-├── Scrap Here/                         # Base folder for downloading files
+├── Scrap Here/                        # Base folder for downloading files
 │
 └── scrape_script.py                   # Python script
 ```
 
-## Configuration
+# Configuration
 
-### Excel File
+## Excel File
+
 - The script reads the input from an Excel file (`Run_Ids - Except Health.xlsx`).
 - **Expected columns**:
   - **`Disease MESH ID`**: Represents the `Mesh ID`.
   - **`Run ID`**: Represents the `Run ID`.
 
-### Parameters
+## Parameters
+
 Set these parameters in the script:
 
-- **File Path**: Path to the Excel file containing `Mesh ID` and `Run ID` pairs.
-- **Base Path**: Directory where files will be organized.
-- **Firefox Binary Path**: Path to the Firefox browser binary.
-- **Base URL**: The base URL for accessing `Run ID` pages.
-
----
-
-## How to Run
-
-### Ensure the Prerequisites:
-1. Install required libraries.
-2. Verify Firefox and GeckoDriver setup.
-
-### Edit Parameters:
-Update the following variables in the script:
 ```
 python
 file_path = r"path_to_your_excel_file.xlsx"
 sheet_name = "Run_Ids - Except Health"
 base_path = r"path_to_download_folder"
-firefox_binary_path = r"path_to_firefox_binary"
-base_url = "https://gmrepo.humangut.info/data/run/"
 ```
 
+## How to Run
+
+### Steps:
+
+1. **Ensure all prerequisites are met:**
+   - Install the required libraries.
+   - Verify the structure of the input Excel file.
+
+2. **Edit the parameters in the script:**
+   - Update `file_path`, `sheet_name`, and `base_path` variables with your actual paths.
+
+3. **Run the script:**
+   ```
+   python scrape_script.py
+   ```
 ## How It Works
 
 ### Reads Input:
 - Extracts `Mesh ID` and `Run ID` pairs from the Excel file.
 
 ### Folder Structure:
-- Ensures a folder for each `Mesh ID` and a subfolder for each `Run ID`.
+- Ensures a folder exists for each `Mesh ID`.
 
 ### Download TSV Files:
-- Navigates to the URL for each `Run ID`.
-- Triggers the download of the associated TSV file.
-- Moves the downloaded file into the corresponding `Run ID` folder.
+- For each `Run ID`:
+  - Uses API calls to retrieve data.
+  - Saves the retrieved data as a `.tsv` file in the corresponding `Mesh ID` folder.
+  - Skips existing files to avoid duplicate downloads.
 
-### Multithreading:
-- Downloads files concurrently to improve performance.
+### Batch Processing:
+- Processes `Run IDs` in batches of 5000 to optimize performance.
 
 ---
 
@@ -106,20 +105,17 @@ base_url = "https://gmrepo.humangut.info/data/run/"
 
 ### Common Issues
 
-#### 1. GeckoDriver Not Found
-- Ensure the GeckoDriver binary is added to your system PATH or specify its full path in the script:
-  ```
-  python
-  service = Service(r"path_to_geckodriver")
-  ```
-#### 2. Headless Mode Fails
-If the headless mode doesn't work:
-Set options.headless = False to debug with a visible browser window.
-#### 3. Missing Files
-Check the console output for errors.
-Verify the website’s behaviour in a normal browser for compatibility issues.
+#### 1. API Call Fails
+- Check the console output for the specific error code.
+- Verify the website's API functionality.
+
+#### 2. Missing Files
+- Ensure the correct paths for the Excel file and base directory are specified.
+- Check the console output for skipped or failed `Run ID`s.
+
+---
 
 ## Future Enhancements
-- Implement retry logic for failed downloads.
-- Add support for other browsers like Chrome.
-- Generate a summary report of downloaded files.
+- Implement retry logic for failed API calls.
+- Add functionality for detailed logging.
+- Generate a summary report of successfully downloaded files and failed attempts.
